@@ -2,6 +2,7 @@ const User = require('../model/userModel');
 const bcrypt = require('bcryptjs');
 const { registerValidation, loginValidation } = require('../validation/validation')
 const jwt = require('jsonwebtoken');
+const { roles } = require('../util/const');
 
 exports.getUser = async (req, res) => {
   try {
@@ -52,13 +53,43 @@ exports.addUser = async (req, res) => {
 
 exports.editUser = (req, res) => {
   User.findOneAndUpdate({ _id: req.params.id },
+    {
+      name: req.body.name,
+      phone: req.body.phone,
+    },
     { new: true },
     (err, doc) => {
       if (err) throw (err)
       else {
         res.json({
+          message: 'User information updated',
           data: doc
         });
+      }
+    })
+};
+
+//update role
+exports.adminRole = (req, res) => {
+  User.findOneAndUpdate({ _id: req.body.id },
+    {
+      name: req.body.name,
+      phone: req.body.phone,
+    },
+    { new: true },
+    (err, doc) => {
+      if (err) throw (err)
+      else {
+        if (doc.role === "ADMIN") {
+          res.json({
+            message: 'You can access this route',
+          });
+        } else {
+          res.json({
+            error: 'Access denied',
+            message: 'Only Admin can access this route',
+          });
+        }
       }
     })
 };
@@ -68,10 +99,14 @@ exports.deleteUser = async (req, res) => {
     const id = req.params.id;
     await User.findByIdAndRemove(id)
       .then(() => {
-        console.log('User removed');
+        res.json({
+          message: 'User Deleted'
+        });
       })
   } catch (error) {
-    console.log('error ' + error);
+    res.json({
+      error: error
+    });
   }
 };
 

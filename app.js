@@ -2,16 +2,17 @@ const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express');
 const app = express();
-const connction = require('./connection/conn').connect; // impoting connection file 
-
+const connction = require('./connection/conn').connect; // impoting connection file
 const adminRouter = require('./routers/admin');
-const fbAdminRouter = require('./routers/fbadmin');
+const roleAdminRouter = require('./routers/roleAdmin');
+// const fbAdminRouter = require('./routers/fbadmin');
 
 app.use(express.json());
 const port = process.env.PORT;
 
 app.use('/admin', adminRouter);
-app.use('/fb/admin', fbAdminRouter);
+app.use('/role/admin', roleAdminRouter);
+// app.use('/fb/admin', fbAdminRouter);
 
 // calling 
 connction((result) => {
