@@ -69,7 +69,7 @@ exports.editUser = (req, res) => {
     })
 };
 
-//update role
+//admin role
 exports.adminRole = (req, res) => {
   User.findOneAndUpdate({ _id: req.body.id },
     {
